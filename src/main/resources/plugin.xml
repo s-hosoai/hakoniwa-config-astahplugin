@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+   <extension point="com.change_vision.astah.ui.view">
+      <view
+              id="jp.toppers.hakoniwa.hakonfig.HakoniwaConfigJsonView"
+              type="extraTab"
+              class="jp.toppers.hakoniwa.hakonfig.HakoniwaConfigJsonView"/>
+   </extension>
+</plugin>

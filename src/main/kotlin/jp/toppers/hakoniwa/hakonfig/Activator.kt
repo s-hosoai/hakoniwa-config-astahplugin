@@ -7,18 +7,22 @@ import org.osgi.framework.BundleActivator
 import org.osgi.framework.BundleContext
 
 class Activator : BundleActivator {
-    private val projectAccessor = AstahAPI.getAstahAPI().projectAccessor
+    private val api = AstahAPI.getAstahAPI()
     override fun start(context: BundleContext) {
-        projectAccessor.addProjectEventListener(object : ProjectEventListener {
-            override fun projectOpened(p0: ProjectEvent?) {}
-            override fun projectClosed(p0: ProjectEvent?) {}
+        api.projectAccessor.addProjectEventListener(object : ProjectEventListener {
+            override fun projectOpened(p0: ProjectEvent?) {
+                ModelToConfigJsonConverter.convert()
+            }
 
             override fun projectChanged(p0: ProjectEvent?) {
                 ModelToConfigJsonConverter.convert()
             }
+
+            override fun projectClosed(p0: ProjectEvent?) {}
         })
     }
 
     override fun stop(context: BundleContext) {
     }
 }
+

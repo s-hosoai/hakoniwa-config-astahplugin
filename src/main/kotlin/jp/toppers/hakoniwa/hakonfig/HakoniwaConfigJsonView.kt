@@ -5,6 +5,8 @@ import com.change_vision.jude.api.inf.ui.ISelectionListener
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rtextarea.RTextScrollPane
 import java.awt.BorderLayout
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
 import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.text.JTextComponent
@@ -32,6 +34,11 @@ class HakoniwaConfigJsonView : JPanel(), IPluginExtraTabView {
             it.lineNumbersEnabled = true
         })
         ModelToConfigJsonConverter.addListener { jsonChangedCallback(it) }
+        textArea.addFocusListener(object : FocusAdapter() {
+            override fun focusGained(e: FocusEvent?) {
+                ModelToConfigJsonConverter.convert()
+            }
+        })
     }
 
     private fun jsonChangedCallback(result: String) {

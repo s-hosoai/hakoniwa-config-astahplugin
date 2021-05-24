@@ -9,6 +9,7 @@ import kotlinx.serialization.json.Json
 // helper extensions
 private fun List<IClass>.filterByStereotype(stereotype: String) = this.filter { it.stereotypes.contains(stereotype) }
 private fun IClass.attr(name: String) = this.attributes.firstOrNull { it.name == name }?.initialValue ?: ""
+
 private fun IClass.connectedStereotypedClass(stereoType: String) =
     this.attributes.map { it.type }.filter { it.stereotypes.contains(stereoType) }
 
@@ -86,10 +87,20 @@ object ModelToConfigJsonConverter {
 
         val configClass = classes.firstOrNull { it.name == "Config" }
         val config = ConfigJson(
-            core_ipaddr = configClass?.attr("core_ipaddr") ?: "",
-            core_portno = configClass?.attr("core_portno")?.toInt(0) ?: 0,
-            asset_timeout = configClass?.attr("asset_timeout")?.toInt(0) ?: 0,
-            SymTimeMeasureFilePath = configClass?.attr("SymTimeMeasureFilePath") ?: "",
+            core_ipaddr = configClass?.attr("core_ipaddr").let {
+                when {
+                    it.isNullOrEmpty() -> "{{RESOLVE_IPADDR}}"
+                    else -> it
+                }
+            },
+            core_portno = configClass?.attr("core_portno")?.toInt(50051) ?: 50051,
+            asset_timeout = configClass?.attr("asset_timeout")?.toInt(3) ?: 3,
+            SymTimeMeasureFilePath = configClass?.attr("SymTimeMeasureFilePath").let {
+                when {
+                    it.isNullOrEmpty() -> null
+                    else -> it
+                }
+            },
             inside_assets = insideAssets,
             outside_assets = outsideAssets,
             pdu_writers = pduWriters,

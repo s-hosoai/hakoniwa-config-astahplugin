@@ -130,11 +130,11 @@ object ModelToConfigJsonConverter {
         NamedClass(this.name, this.attr("class_name"))
 
     private fun IClass.convertUdpMethod() = UdpMethod(
-        attr("method_name"),
-        attr("ipaddr"),
-        attr("portno").toInt(0),
-        attr("iosize").toInt(0),
-        attr("is_read").toBoolean(false)
+        method_name = this.name,
+        ipaddr = attr("ipaddr"),
+        portno = attr("portno").toInt(0),
+        iosize = attr("iosize").toInt(0),
+        is_read = attr("is_read").toBoolean(false)
     )
 
     private fun IClass.convertConnector(): Connector {
